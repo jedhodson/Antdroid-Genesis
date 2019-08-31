@@ -12,7 +12,7 @@
  */
 void servoSet(int servoId, int pos) {
   DEBUG_SERVO(servoId, pos);
-  
+
   if (! isIntInArray(SERVO_SKIP_INITALIZATION, servoId) ) {
     SERVO[servoId].write(pos);
   }
@@ -26,8 +26,9 @@ void servoSet(int servoId, int pos) {
    @param startingPos   Position to move from
    @param targetPos     The target servo position
    @param servoWaitTime Delay between each position iteration
+   @param servoInvertedState  Array of servo inverted states
 */
-void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, int targetPos, int servoWaitTime) {
+void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, int targetPos, int servoWaitTime, int servoInvertedState[]) {
   DEBUG_PRINT("servoSetRelativeToInital()");
 
   int posDiff = targetPos - startingPos;
@@ -36,7 +37,7 @@ void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, in
     for (int pos = startingPos; pos <= targetPos; pos++) {
       for (int i = 0; i < servoCount; i++) {
         int servoId = _servos[i];
-        servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * SERVO_INVERTED_STATE[servoId]));
+        servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * servoInvertedState[servoId]));
       }
 
       delay(servoWaitTime);
@@ -45,12 +46,26 @@ void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, in
     for (int pos = startingPos; pos >= targetPos; pos--) {
       for (int i = 0; i < servoCount; i++) {
         int servoId = _servos[i];
-        servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * SERVO_INVERTED_STATE[servoId]));
+        servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * servoInvertedState[servoId]));
       }
 
       delay(servoWaitTime);
     }
   }
+}
+
+/**
+   Set a series of servos to the same position relative to their initial positions
+   Useful for bulk moving servos the same distance. Defaults with SERVO_INVERTED_STATE
+   for param servoInvertedState[]
+
+   @param _servos[]     Array of servos to set
+   @param startingPos   Position to move from
+   @param targetPos     The target servo position
+   @param servoWaitTime Delay between each position iteration
+*/
+void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, int targetPos, int servoWaitTime) {
+  servoSetRelativeToInital(_servos, servoCount, startingPos, targetPos, servoWaitTime, SERVO_INVERTED_STATE);
 }
 
 /**
