@@ -11,6 +11,8 @@
  * @param pos     Absolute position to set servo
  */
 void servoSet(int servoId, int pos) {
+  DEBUG_SERVO(servoId, pos);
+  
   if (! isIntInArray(SERVO_SKIP_INITALIZATION, servoId) ) {
     SERVO[servoId].write(pos);
   }
