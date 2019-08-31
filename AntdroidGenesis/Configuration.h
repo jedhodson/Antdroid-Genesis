@@ -57,6 +57,6 @@ int SERVO_SKIP_INITALIZATION[] = {
 
 /** Return -1 if servo is inverted. Servos on the right are inverted */
 int SERVO_INVERTED_STATE[18] = {
-  1, 1, 1, 1, 1, 1, 1, 1,         // Left hand servos
-  -1, -1, -1, -1, -1, -1, -1, -1  // Right hand servos
+  1, 1, 1, 1, 1, 1, 1, 1, 1,        // Left hand servos
+  -1, -1, -1, -1, -1, -1, -1, -1, -1  // Right hand servos
 };
