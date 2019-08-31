@@ -45,6 +45,9 @@ void initializeServos() {
 }
 
 void setup() {
+  Serial.begin(9600);
+  Serial.println("Antdroid starting...");
+
   initializeServos();
 
   /** DO STUFF */
@@ -55,5 +58,51 @@ void setup() {
 }
 
 void loop() {
+  // Wait for serial commands to execute
+  while(Serial.available() > 0 ) {
+    String str = Serial.readString();
+    setCommand(str);
+  }
+}
 
+void setCommand(String input) {
+  String _servo = getSplitString(input, ',', 0);
+  String _pos   = getSplitString(input, ',', 1);
+
+  int pos   = _pos.toInt();
+
+  Serial.println("SERVO[" + _servo + "], pos: " + (String)pos);
+
+  if(_servo == "t") {
+    setTibias(0, pos);
+  } 
+  else if(_servo == "f") {
+    setFemurs(0, pos);
+  } 
+  else {
+    int servo = _servo.toInt();
+    if(servo >= 0 && servo < 18) {
+      DEBUG_PRINT("Setting servo " + (String)servo + " to position " + (String)pos);
+      setServoRelativeToInitialBasic(servo, pos, SERVO_WAIT_TIME);
+    }
+  }
+}
+
+void setServoRelativeToInitialBasic(int servoId, int pos, int servoWaitTime) {
+  DEBUG_PRINT("setServoRelativeToInitalBasic()");
+  
+  int currentPos  = SERVO[servoId].read();
+  int posDiff     = pos - currentPos;
+
+  if(posDiff > 0) {
+    for(int newPos = currentPos; newPos <= pos; newPos++) {
+      SERVO[servoId].write(SERVO_INITPOS_OFFSET[servoId] + (newPos * SERVO_INVERTED_STATE[servoId]));
+      delay(servoWaitTime);
+    }
+  } else {
+    for(int newPos = currentPos; newPos >= pos; newPos--) {
+      SERVO[servoId].write(SERVO_INITPOS_OFFSET[servoId] + (newPos * SERVO_INVERTED_STATE[servoId]));
+      delay(servoWaitTime);
+    }
+  }
 }
