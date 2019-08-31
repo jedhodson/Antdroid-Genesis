@@ -96,23 +96,3 @@ void setCommand(String input) {
     }
   }
 }
-
-/** @TODO Function replaced by setSingleServoRelativeToInitial */
-void setServoRelativeToInitialBasic(int servoId, int pos, int servoWaitTime) {
-  DEBUG_PRINT("setServoRelativeToInitalBasic()");
-  
-  int currentPos  = SERVO[servoId].read();
-  int posDiff     = pos - currentPos;
-
-  if(posDiff > 0) {
-    for(int newPos = currentPos; newPos <= pos; newPos++) {
-      SERVO[servoId].write(SERVO_INITPOS_OFFSET[servoId] + (newPos * SERVO_INVERTED_STATE[servoId]));
-      delay(servoWaitTime);
-    }
-  } else {
-    for(int newPos = currentPos; newPos >= pos; newPos--) {
-      SERVO[servoId].write(SERVO_INITPOS_OFFSET[servoId] + (newPos * SERVO_INVERTED_STATE[servoId]));
-      delay(servoWaitTime);
-    }
-  }
-}
