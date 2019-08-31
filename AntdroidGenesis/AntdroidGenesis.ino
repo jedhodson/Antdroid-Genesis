@@ -81,6 +81,11 @@ void setCommand(String input) {
   else if(_servo == "f") {
     setFemurs(pos);
   } 
+  // Read a servo
+  else if(_servo == "r") {
+    int servoPosition = SERVO[pos].read();
+    DEBUG_PRINT("Position of servo " + (String)pos + " is " + (String)servoPosition);
+  }
   // Set a specific servo
   else {
     int servo = _servo.toInt();
