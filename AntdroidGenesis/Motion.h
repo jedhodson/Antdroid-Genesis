@@ -25,11 +25,11 @@ void servoSet(int servoId, int pos) {
    @param targetPos     The target servo position
    @param servoWaitTime Delay between each position iteration
 */
-void servoSetRelativeToInital(int _servos[], int startingPos, int targetPos, int servoWaitTime) {
+void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, int targetPos, int servoWaitTime) {
   DEBUG_PRINT("servoSetRelativeToInital()");
   
   for (int pos = startingPos; pos < targetPos; pos++) {
-    for (int i = 0; i < ARRAY_SIZE(_servos); i++) {
+    for (int i = 0; i < servoCount; i++) {
       int servoId = _servos[i];
       servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * SERVO_INVERTED_STATE[servoId]));
     }
@@ -42,22 +42,22 @@ void servoSetRelativeToInital(int _servos[], int startingPos, int targetPos, int
    Overload for bulkSetRelativeToInital with SERVO_WAIT_TIME for
     servoWaitTime param
 */
-void servoSetRelativeToInital(int _servos[], int startingPos, int targetPos) {
-  servoSetRelativeToInital(_servos, startingPos, targetPos, SERVO_WAIT_TIME);
+void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, int targetPos) {
+  servoSetRelativeToInital(_servos, servoCount, startingPos, targetPos, SERVO_WAIT_TIME);
 }
 
 /** Set all tibias to specified position */
 void setFemurs(int startPos, int targetPos) {
   DEBUG_PRINT("setFemurs(" + (String)targetPos + ")");
 
-  servoSetRelativeToInital(new int[6]{1, 4, 7, 10, 13, 16}, startPos, targetPos);
+  servoSetRelativeToInital(new int[6]{1, 4, 7, 10, 13, 16}, 6, startPos, targetPos);
 }
 
 /** Set all tibias to specified position */
 void setTibias(int startPos, int targetPos) {
   DEBUG_PRINT("setTibias(" + (String)targetPos + ")");
 
-  servoSetRelativeToInital(new int[6]{2, 5, 8, 11, 14, 17}, startPos, targetPos);
+  servoSetRelativeToInital(new int[6]{2, 5, 8, 11, 14, 17}, 6, startPos, targetPos);
 }
 
 /**
