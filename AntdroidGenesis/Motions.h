@@ -18,15 +18,15 @@ void MotionPrepareForStand() {
 void MotionTouchGround() {
   DEBUG_PRINT("MotionTouchGround()");
   
-  setTibias(0, 15);
-  setFemurs(0, 20);
+  setTibias(15);
+  setFemurs(20);
 }
 
 /** All legs touch the ground. Suitable for standing */
 void MotionUpTouchGround() {
   DEBUG_PRINT("MotionUpTouchGround()");
   
-  setTibias(0, 40);
+  setTibias(40);
 }
 
 /** Touch the ground, then move Femurs to push off the ground. 
@@ -36,5 +36,5 @@ void MotionPushUpright() {
   DEBUG_PRINT("MotionPushUpright()");
   
   MotionUpTouchGround();
-  setFemurs(0, 25);
+  setFemurs(25);
 }

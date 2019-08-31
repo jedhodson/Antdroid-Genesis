@@ -74,10 +74,10 @@ void setCommand(String input) {
   Serial.println("SERVO[" + _servo + "], pos: " + (String)pos);
 
   if(_servo == "t") {
-    setTibias(0, pos);
+    setTibias(pos);
   } 
   else if(_servo == "f") {
-    setFemurs(0, pos);
+    setFemurs(pos);
   } 
   else {
     int servo = _servo.toInt();
