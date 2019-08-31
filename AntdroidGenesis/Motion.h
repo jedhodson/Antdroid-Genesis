@@ -59,6 +59,32 @@ void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, in
   servoSetRelativeToInital(_servos, servoCount, startingPos, targetPos, SERVO_WAIT_TIME);
 }
 
+/**
+ * Set a servo position relative to inital
+ * 
+ * @param servoId       Index of the servo
+ * @param targetPos     Target position
+ * @param servoWaitTime Delay between each position iteration
+*/
+void setSingleServoRelativeToInitial(int servoId, int targetPos, int servoWaitTime) {
+  DEBUG_PRINT("serSingleServoRelativeToInitial(" + (String)servoId + ", " + (String)targetPos + ", " + (String)servoWaitTime);
+
+  int currentServoPos = SERVO[servoId].read();
+
+  servoSetRelativeToInital(new int[1]{servoId}, 1, currentServoPos, targetPos, servoWaitTime);
+}
+
+/**
+ * Overload for setSingleServoRelativeToInitial
+ * Uses SERVO_WAIT_TIME as servoWaitTime param
+ * 
+ * @param servoId       Index of the servo
+ * @param targetPos     Target position
+ */
+void setSingleServoRelativeToInitial(int servoId, int targetPos) {
+  setSingleServoRelativeToInitial(servoId, targetPos, SERVO_WAIT_TIME);
+}
+
 /** Set all femures to specified position */
 int allFemureLastPos = 0;
 

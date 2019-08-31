@@ -73,21 +73,31 @@ void setCommand(String input) {
 
   Serial.println("SERVO[" + _servo + "], pos: " + (String)pos);
 
+  // Set all Tibias
   if(_servo == "t") {
     setTibias(pos);
   } 
+  // Set all Femurs
   else if(_servo == "f") {
     setFemurs(pos);
   } 
+  // Set a specific servo
   else {
     int servo = _servo.toInt();
+
     if(servo >= 0 && servo < 18) {
       DEBUG_PRINT("Setting servo " + (String)servo + " to position " + (String)pos);
-      setServoRelativeToInitialBasic(servo, pos, SERVO_WAIT_TIME);
+
+      // setServoRelativeToInitialBasic(servo, pos, SERVO_WAIT_TIME);
+      setSingleServoRelativeToInitial(servo, pos, SERVO_WAIT_TIME);
+    } 
+    else {
+      DEBUG_PRINT("Specificed servo is out of range: " + (String)servo);
     }
   }
 }
 
+/** @TODO Function replaced by setSingleServoRelativeToInitial */
 void setServoRelativeToInitialBasic(int servoId, int pos, int servoWaitTime) {
   DEBUG_PRINT("setServoRelativeToInitalBasic()");
   
