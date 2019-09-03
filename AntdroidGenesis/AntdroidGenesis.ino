@@ -67,7 +67,7 @@ void setup()
 
 void loop()
 {
-  // Wait for serial commands to execute
+  // Wait for serial commands to execute. @TODO future version should be optimized so arduino isnt parsing a string
   while (Serial.available() > 0)
   {
     String str = Serial.readString();
