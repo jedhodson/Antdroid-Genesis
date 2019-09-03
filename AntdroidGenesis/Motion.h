@@ -105,6 +105,20 @@ void setSingleServoRelativeToInitial(int servoId, int targetPos, int servoWaitTi
 }
 
 /**
+ * Set a servo position relative to itself
+ * 
+ * @param servoId       Index of the servo
+ * @param targetPos     Target position relative to self
+ * @param servoWaitTime Delay between each position iteration
+ */
+void setSingleServoRelativeToSelf(int servoId, int targetPos, int servoWaitTime) {
+  int currentServoPos = SERVO[servoId].read();
+  targetPos += currentServoPos;
+
+  servoSetRelativeToInital(new int[1]{servoId}, 1, currentServoPos, targetPos, servoWaitTime);
+}
+
+/**
  * Overload for setSingleServoRelativeToInitial
  * Uses SERVO_WAIT_TIME as servoWaitTime param
  * 

@@ -16,6 +16,8 @@ Servo SERVO[18];
 #include "Motion.h"
 #include "Motions.h"
 
+bool controlMode = false;
+
 /**
  * Initialize Servo
  * Attach servo to pin if no already attached and set send to initial position
@@ -82,38 +84,55 @@ void setCommand(String input)
 
   int pos = _pos.toInt();
 
-  Serial.println("SERVO[" + _servo + "], pos: " + (String)pos);
+  DEBUG_PRINT("SERVO[" + _servo + "], pos: " + (String)pos);
 
-  // Set all Tibias
-  if (_servo == "t")
+  char servoSwitch = _servo.charAt(0);
+  switch (servoSwitch)
   {
+  case 't': // Set all tibias to pos
     setTibias(pos);
-  }
-  // Set all Femurs
-  else if (_servo == "f")
-  {
+    break;
+  case 'f': // Set all femurs to pos
     setFemurs(pos);
-  }
-  // Read a servo
-  else if (_servo == "r")
-  {
+    break;
+  case 'r': // Get servo position (from memory)
+  { 
     int servoPosition = SERVO[pos].read();
-    DEBUG_PRINT("Position of servo " + (String)pos + " is " + (String)servoPosition);
+    Serial.println("Position of servo " + (String)pos + " is " + (String)servoPosition);
+    break;
   }
-  // Set a specific servo
+  case 'm': // Change control mode
+  { 
+    controlMode = !controlMode;
+    Serial.println("Changed control mode to " + getControlModeName());
+    break;
+  }
+  default: // Move a specific servo
+    moveServoFromString(_servo, pos);
+    break;
+  }
+}
+
+String getControlModeName()
+{
+  return controlMode ? "Relative to initial" : "Relative to current";
+}
+
+void moveServoFromString(String _servo, int pos)
+{
+  int servo = _servo.toInt();
+
+  if (servo >= 0 && servo < 18)
+  {
+    DEBUG_PRINT("Setting servo " + (String)servo + " to position " + (String)pos + " mode: " + getControlModeName());
+
+    if (controlMode)
+      setSingleServoRelativeToInitial(servo, pos, SERVO_WAIT_TIME);
+    else
+      setSingleServoRelativeToSelf(servo, pos, SERVO_WAIT_TIME);
+  }
   else
   {
-    int servo = _servo.toInt();
-
-    if (servo >= 0 && servo < 18)
-    {
-      DEBUG_PRINT("Setting servo " + (String)servo + " to position " + (String)pos);
-      
-      setSingleServoRelativeToInitial(servo, pos, SERVO_WAIT_TIME);
-    }
-    else
-    {
-      DEBUG_PRINT("Specificed servo is out of range: " + (String)servo);
-    }
+    DEBUG_PRINT("Specificed servo is out of range: " + (String)servo);
   }
 }
