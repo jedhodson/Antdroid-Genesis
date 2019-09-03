@@ -53,7 +53,7 @@ void initializeServos()
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Antdroid starting...");
 
   initializeServos();
