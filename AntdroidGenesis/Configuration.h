@@ -50,9 +50,26 @@ int SERVO_INITPOS_OFFSET[18] = {
     95
 };
 
-/** Skip initializing a servo if its index is listed here */
-int SERVO_SKIP_INITALIZATION[] = {
-    9 // Servo always attempts to go to 0, regardless of sent position
+/** Skip initializing/writing to a servo it is listed as false */
+bool SERVO_ENABLED[18] = {
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,  // Servo 9 always attempts to go to 0, regardless of sent position
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
 };
 
 /** Return -1 if servo is inverted. Servos on the right are inverted */

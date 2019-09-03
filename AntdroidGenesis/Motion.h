@@ -5,7 +5,7 @@
 
 /** 
  * Set servo to specified position 
- * Checks if servo is on SERVO_SKIP_INITIALIZATION list
+ * Checks if servo is on SERVO_ENABLED list
  * 
  * @param servoId Index of servo in SERVO[]
  * @param pos     Absolute position to set servo
@@ -14,7 +14,7 @@ void servoSet(int servoId, int pos)
 {
   DEBUG_SERVO(servoId, pos);
 
-  if (!isIntInArray(SERVO_SKIP_INITALIZATION, servoId))
+  if (SERVO_ENABLED[servoId])
   {
     SERVO[servoId].write(pos);
   }
@@ -151,7 +151,7 @@ void setTibias(int targetPos)
 /**
  *  Set a servo to specified position (absolute) with smoothing
  *  servoWaitTime param sets speed (lower is faster).
- *  Checks if servo is on SERVO_SKIP_INITIALIZATION list
+ *  Checks if servo is on SERVO_ENABLED list
  *  
  *  @param servoId        Index of servo in SERVO[]
  *  @param pos            Position to set
@@ -159,7 +159,7 @@ void setTibias(int targetPos)
  */
 void servoSmoothSet(int servoId, int pos, int servoWaitTime)
 {
-  if (!isIntInArray(SERVO_SKIP_INITALIZATION, servoId))
+  if (SERVO_ENABLED[servoId])
   {
     Servo _servo = SERVO[servoId];
 

@@ -37,7 +37,7 @@ void initializeServos()
 
   for (int i = 0; i < 18; i++)
   {
-    if (!isIntInArray(SERVO_SKIP_INITALIZATION, i))
+    if (SERVO_ENABLED[i])
     {
       DEBUG_PRINT("Configuring servo " + (String)i + " on pin " + (String)SERVO_PIN_MAP[i]);
 

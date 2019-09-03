@@ -33,23 +33,3 @@ String getSplitString(String data, char separator, int index)
 
   return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
-
-/**
- * Check if int is in array
- * @TODO ARRAY_SIZE macro does not work properly. Needs to be fixed
- * 
- * @param searchArray[] Array to search in
- * @param searchElement Element to check for
- * 
- * @return bool True if element found in array
- */
-bool isIntInArray(int searchArray[], int searchElement)
-{
-  for (int i = 0; i < ARRAY_SIZE(searchArray); i++)
-  {
-    if (searchArray[i] == searchElement)
-      return true;
-  }
-
-  return false;
-}
