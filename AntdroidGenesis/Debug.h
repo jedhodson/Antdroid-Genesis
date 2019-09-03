@@ -3,13 +3,13 @@
 //#define DEBUG_SERVO_SIGNAL
 
 #ifdef DEBUG
-#define DEBUG_PRINT(x) Serial.println(x);
+#define DEBUG_PRINT(x) Serial.println(x)
 #else
-#define DEBUG_PRINT(x) ;
+#define DEBUG_PRINT(x) 
 #endif
 
 #ifdef DEBUG_SERVO_SIGNAL
-#define DEBUG_SERVO(servo, position) Serial.println("servoSet(" + (String)servo + ", " + (String)position + ")");
+#define DEBUG_SERVO(servo, position) Serial.println("servoSet(" + (String)servo + ", " + (String)position + ")")
 #else
-#define DEBUG_SERVO(servo, position) ;
+#define DEBUG_SERVO(servo, position) 
 #endif
