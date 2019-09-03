@@ -28,7 +28,7 @@ int SERVO_PIN_MAP[18] = {
     39  // Back   Right Tibia
 };
 
-/** Servo inital position offsets */
+/** Servo inital position offsets @TODO Update initial position to be legs on ground */
 int SERVO_INITPOS_OFFSET[18] = {
     90,
     48,
