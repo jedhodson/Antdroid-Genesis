@@ -175,16 +175,14 @@ void servoSmoothSet(int servoId, int pos, int servoWaitTime)
 {
   if (SERVO_ENABLED[servoId])
   {
-    Servo _servo = SERVO[servoId];
-
-    int current = _servo.read();
+    int current = SERVO[servoId].read();
     int diff = pos - current;
 
     if (diff > 0)
     {
       for (int i = current; i <= pos; i++)
       {
-        _servo.write(i);
+        
         delay(servoWaitTime);
       }
     }
@@ -192,7 +190,7 @@ void servoSmoothSet(int servoId, int pos, int servoWaitTime)
     {
       for (int i = current; i >= pos; i--)
       {
-        _servo.write(i);
+        servoSet(servoId, i);
         delay(servoWaitTime);
       }
     }

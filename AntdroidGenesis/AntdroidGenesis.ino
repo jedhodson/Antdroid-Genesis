@@ -29,7 +29,7 @@ void initializeServo(int index)
   if (!SERVO[index].attached())
     SERVO[index].attach(SERVO_PIN_MAP[index]);
 
-  SERVO[index].write(SERVO_INITPOS_OFFSET[index]);
+  setServo(index, SERVO_INITPOS_OFFSET[index]);
 }
 
 /** Build the servo array and initialize the servos */
