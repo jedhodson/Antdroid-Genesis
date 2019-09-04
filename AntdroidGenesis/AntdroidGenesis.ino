@@ -59,6 +59,8 @@ void setup()
   delay(1000);
 
   MotionPushUpright();
+
+  Serial.println("Done!");
 }
 
 void loop()
@@ -107,7 +109,7 @@ void setCommand(String input)
       }
       _mode = (CONTROL_MODE)_current;
     } else {
-      _mode = (CONTROL_MODE)(pos+1);
+      _mode = (CONTROL_MODE)(pos-1);
     }
 
     Serial.println("Changed control mode to " + getControlModeName());
