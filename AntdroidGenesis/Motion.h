@@ -31,7 +31,7 @@ void servoSet(int servoId, int pos, bool update)
   if (SERVO_ENABLED[servoId])
   {
     if(pos < 0) pos = 0;
-    if(pos > 180) pos = 180;1
+    if(pos > 180) pos = 180;
 
     tlc_setServo(servoId, pos);
     SERVO_POSITION[servoId] = pos;

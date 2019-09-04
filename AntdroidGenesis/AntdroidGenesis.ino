@@ -15,7 +15,13 @@
 #include "Motion.h"
 #include "Motions.h"
 
-bool controlMode = false;
+typedef enum {
+  RELATIVE_INITIAL = 0,
+  RELATIVE_CURRENT = 1,
+  ABSOLUTE = 2
+} CONTROL_MODE;
+
+CONTROL_MODE _mode = RELATIVE_INITIAL;
 
 /** Build the servo array and initialize the servos */
 void initializeServos()
@@ -91,7 +97,19 @@ void setCommand(String input)
   }
   case 'm': // Change control mode
   { 
-    controlMode = !controlMode;
+    if(pos == 0) {
+      int _current = (int)_mode;
+      if(_current = 2) {
+        _current = 0;
+      }
+      else {
+        _current++;
+      }
+      _mode = (CONTROL_MODE)_current;
+    } else {
+      _mode = (CONTROL_MODE)(pos+1);
+    }
+
     Serial.println("Changed control mode to " + getControlModeName());
     break;
   }
@@ -103,7 +121,17 @@ void setCommand(String input)
 
 String getControlModeName()
 {
-  return controlMode ? "Relative to initial" : "Relative to current";
+  switch(_mode) {
+    case RELATIVE_CURRENT:
+      return "RELATIVE_CURRENT";
+      break;
+    case RELATIVE_INITIAL:
+      return "RELATIVE_INTITIAL";
+      break;
+    case ABSOLUTE:
+      return "ABSOLUTE";
+      break;
+  }
 }
 
 void moveServoFromString(String _servo, int pos)
@@ -112,12 +140,19 @@ void moveServoFromString(String _servo, int pos)
 
   if (servo >= 0 && servo < 18)
   {
-    DEBUG_PRINT("Setting servo " + (String)servo + " to position " + (String)pos + " mode: " + getControlModeName());
+    DEBUG_PRINT("Setting servo " + (String)servo + " to position " + (String)pos + ", mode: " + getControlModeName());
 
-    if (controlMode)
-      setSingleServoRelativeToInitial(servo, pos, SERVO_WAIT_TIME);
-    else
+    switch(_mode) {
+      case RELATIVE_CURRENT:
       setSingleServoRelativeToSelf(servo, pos, SERVO_WAIT_TIME);
+        break;
+      case RELATIVE_INITIAL:
+        setSingleServoRelativeToInitial(servo, pos, SERVO_WAIT_TIME);
+        break;
+      case ABSOLUTE:
+        servoSmoothSet(servo, pos, SERVO_WAIT_TIME);
+        break;
+    }
   }
   else
   {
