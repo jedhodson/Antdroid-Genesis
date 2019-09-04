@@ -203,7 +203,7 @@ void servoSmoothSet(int servoId, int pos, int servoWaitTime)
     {
       for (int i = current; i <= pos; i++)
       {
-        
+        servoSet(servoId, i, true);
         delay(servoWaitTime);
       }
     }
