@@ -6,9 +6,8 @@
  * Femur  - Middle leg servo
  * Tibia  - Lower leg (the blue legs)
 */
-
-#include <Servo.h>
-Servo SERVO[18];
+#include "Tlc5940.h"
+#include "tlc_servos.h"
 
 #include "Debug.h"
 #include "Configuration.h"
@@ -18,38 +17,27 @@ Servo SERVO[18];
 
 bool controlMode = false;
 
-/**
- * Initialize Servo
- * Attach servo to pin if no already attached and set send to initial position
- *
- * @param  index   Index of the servo in the SERVO array
-*/
-void initializeServo(int index)
-{
-  if (!SERVO[index].attached())
-    SERVO[index].attach(SERVO_PIN_MAP[index]);
-
-  setServo(index, SERVO_INITPOS_OFFSET[index]);
-}
-
 /** Build the servo array and initialize the servos */
 void initializeServos()
 {
   DEBUG_PRINT("initalizeServos()");
+
+  tlc_initServos();
 
   for (int i = 0; i < 18; i++)
   {
     if (SERVO_ENABLED[i])
     {
       DEBUG_PRINT("Configuring servo " + (String)i + " on pin " + (String)SERVO_PIN_MAP[i]);
-
-      SERVO[i] = Servo(); // Add the servo
-      initializeServo(i); // Initialize the servo
+      
+      servoSet(i, SERVO_INITPOS_OFFSET[i], true);
     }
     else
     {
       DEBUG_PRINT("Skipping servo " + (String)i + " configuration for pin " + (String)SERVO_PIN_MAP[i]);
     }
+
+    delay(SERVO_SETUP_DELAY);
   }
 }
 
@@ -97,7 +85,7 @@ void setCommand(String input)
     break;
   case 'r': // Get servo position (from memory)
   { 
-    int servoPosition = SERVO[pos].read();
+    int servoPosition = SERVO_POSITION[pos];
     Serial.println("Position of servo " + (String)pos + " is " + (String)servoPosition);
     break;
   }

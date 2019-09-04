@@ -3,20 +3,36 @@
    Functions that make the antdroid move
 */
 
+/** Storage of servo position */
+int SERVO_POSITION[18];
+
+/**
+ * Push update to the TLC5940
+ */
+void servoUpdate() {
+  #ifdef DEBUG_SERVO_SIGNAL
+  DEBUG_PRINT("servoUpdate()");
+  #endif
+  Tlc.update();
+}
+
 /** 
  * Set servo to specified position 
  * Checks if servo is on SERVO_ENABLED list
  * 
  * @param servoId Index of servo in SERVO[]
  * @param pos     Absolute position to set servo
+ * @param update  Push update to TLC. If not called, it will need to be manually called
  */
-void servoSet(int servoId, int pos)
+void servoSet(int servoId, int pos, bool update)
 {
   DEBUG_SERVO(servoId, pos);
 
   if (SERVO_ENABLED[servoId])
   {
-    SERVO[servoId].write(pos);
+    tlc_setServo(servoId, pos);
+    SERVO_POSITION[servoId] = pos;
+    if(update) servoUpdate();
   }
 }
 
@@ -43,8 +59,9 @@ void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, in
       for (int i = 0; i < servoCount; i++)
       {
         int servoId = _servos[i];
-        servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * servoInvertedState[servoId]));
+        servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * servoInvertedState[servoId]), false);
       }
+      servoUpdate();
 
       delay(servoWaitTime);
     }
@@ -56,8 +73,9 @@ void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, in
       for (int i = 0; i < servoCount; i++)
       {
         int servoId = _servos[i];
-        servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * servoInvertedState[servoId]));
+        servoSet(servoId, SERVO_INITPOS_OFFSET[servoId] + (pos * servoInvertedState[servoId]), false);
       }
+      servoUpdate();
 
       delay(servoWaitTime);
     }
@@ -99,7 +117,7 @@ void setSingleServoRelativeToInitial(int servoId, int targetPos, int servoWaitTi
 {
   DEBUG_PRINT("setSingleServoRelativeToInitial(" + (String)servoId + ", " + (String)targetPos + ", " + (String)servoWaitTime);
 
-  int currentServoPos = SERVO[servoId].read();    /** @TODO Servo resets to 0 before moving to target position */
+  int currentServoPos = SERVO_POSITION[servoId];   /** @TODO Servo resets to 0 before moving to target position */
 
   servoSetRelativeToInital(new int[1]{servoId}, 1, currentServoPos, targetPos, servoWaitTime);
 }
@@ -112,7 +130,7 @@ void setSingleServoRelativeToInitial(int servoId, int targetPos, int servoWaitTi
  * @param servoWaitTime Delay between each position iteration
  */
 void setSingleServoRelativeToSelf(int servoId, int targetPos, int servoWaitTime) {
-  int currentServoPos = SERVO[servoId].read();
+  int currentServoPos = SERVO_POSITION[servoId];
   targetPos += currentServoPos;
 
   servoSetRelativeToInital(new int[1]{servoId}, 1, currentServoPos, targetPos, servoWaitTime);
@@ -175,7 +193,7 @@ void servoSmoothSet(int servoId, int pos, int servoWaitTime)
 {
   if (SERVO_ENABLED[servoId])
   {
-    int current = SERVO[servoId].read();
+    int current = SERVO_POSITION[servoId];
     int diff = pos - current;
 
     if (diff > 0)
@@ -190,7 +208,7 @@ void servoSmoothSet(int servoId, int pos, int servoWaitTime)
     {
       for (int i = current; i >= pos; i--)
       {
-        servoSet(servoId, i);
+        servoSet(servoId, i, true);
         delay(servoWaitTime);
       }
     }
