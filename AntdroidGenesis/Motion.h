@@ -120,7 +120,7 @@ void setSingleServoRelativeToInitial(int servoId, int targetPos, int servoWaitTi
 {
   DEBUG_PRINT("setSingleServoRelativeToInitial(" + (String)servoId + ", " + (String)targetPos + ", " + (String)servoWaitTime);
 
-  int currentServoPos = SERVO_POSITION[servoId];   /** @TODO Servo resets to 0 before moving to target position */
+  int currentServoPos = SERVO_POSITION[servoId];
 
   servoSetRelativeToInital(new int[1]{servoId}, 1, currentServoPos, targetPos, servoWaitTime);
 }

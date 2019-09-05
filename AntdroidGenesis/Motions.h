@@ -1,7 +1,6 @@
 /**
  * Motions.h
  * Motion functions that can be called from event or in loop
- * @TODO FINISH THIS FILE
  */
 
 /** Move outer legs out in preparation for a stand */
