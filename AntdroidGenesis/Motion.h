@@ -40,6 +40,27 @@ void servoSet(int servoId, int pos, bool update)
 }
 
 /**
+ * Get absolute position of servo
+ * 
+ * @param servoId   Servo ID
+ */
+int getServoPositionAbsolute(int servoId) {
+  return SERVO_POSITION[servoId];
+}
+
+/**
+ * Get the current servo position relative to initial
+ * 
+ * @param servoId   Servo ID
+ */
+int getServoPositionRelativeInitial(int servoId) {
+  int absolutePos = getServoPositionAbsolute(servoId);
+  int newRelPos = (absolutePos * SERVO_INVERTED_STATE[servoId]) - SERVO_INITPOS_OFFSET[servoId]; // @TODO Check math on this line
+
+  return newRelPos;
+}
+
+/**
    Set a series of servos to the same position relative to their initial positions
    Useful for bulk moving servos the same distance
 
@@ -120,9 +141,7 @@ void setSingleServoRelativeToInitial(int servoId, int targetPos, int servoWaitTi
 {
   DEBUG_PRINT("setSingleServoRelativeToInitial(" + (String)servoId + ", " + (String)targetPos + ", " + (String)servoWaitTime);
 
-  int currentServoPos = SERVO_POSITION[servoId];
-
-  servoSetRelativeToInital(new int[1]{servoId}, 1, currentServoPos, targetPos, servoWaitTime);
+  servoSetRelativeToInital(new int[1]{servoId}, 1, getServoPositionRelativeInitial(servoId), targetPos, servoWaitTime);
 }
 
 /**
@@ -133,7 +152,7 @@ void setSingleServoRelativeToInitial(int servoId, int targetPos, int servoWaitTi
  * @param servoWaitTime Delay between each position iteration
  */
 void setSingleServoRelativeToSelf(int servoId, int targetPos, int servoWaitTime) {
-  int currentServoPos = SERVO_POSITION[servoId];
+  int currentServoPos = getServoPositionRelativeInitial(servoId);
   targetPos += currentServoPos;
 
   servoSetRelativeToInital(new int[1]{servoId}, 1, currentServoPos, targetPos, servoWaitTime);
