@@ -55,7 +55,7 @@ int getServoPositionAbsolute(int servoId) {
  */
 int getServoPositionRelativeInitial(int servoId) {
   int absolutePos = getServoPositionAbsolute(servoId);
-  int newRelPos = (absolutePos * SERVO_INVERTED_STATE[servoId]) - SERVO_INITPOS_OFFSET[servoId]; // @TODO Check math on this line
+  int newRelPos = (absolutePos - SERVO_INITPOS_OFFSET[servoId])/SERVO_INVERTED_STATE[servoId]; // @TODO Check math on this line
 
   return newRelPos;
 }
@@ -108,7 +108,7 @@ void servoSetRelativeToInital(int _servos[], int servoCount, int startingPos, in
 
 /**
    Set a series of servos to the same position relative to their initial positions
-   Useful for bulk moving servos the same distance. Defaults with SERVO_INVERTED_STATE
+   Useful for bulk moving servos the same distance. 
    for param servoInvertedState[]
 
    @param _servos[]     Array of servos to set
