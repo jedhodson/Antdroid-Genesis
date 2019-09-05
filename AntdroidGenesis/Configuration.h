@@ -3,7 +3,8 @@
  */
 
 /** Default servo settings */
-#define SERVO_WAIT_TIME 40    // Delay inbetween each updating the same servo
+//#define SERVO_WAIT_TIME 40    // Delay inbetween each updating the same servo
+int SERVO_WAIT_TIME = 40;
 #define SERVO_SETUP_DELAY 200 // Delay between setting up each servo on inital startup
 
 /** Servo pin map */

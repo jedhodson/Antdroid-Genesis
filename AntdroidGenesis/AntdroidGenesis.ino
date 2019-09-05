@@ -115,6 +115,10 @@ void setCommand(String input)
     Serial.println("Changed control mode to " + getControlModeName());
     break;
   }
+  case 's': // Adjust the speed
+    DEBUG_PRINT("Changing wait time from " + (String)SERVO_WAIT_TIME + " to " + (String)pos);
+    SERVO_WAIT_TIME = pos;
+    break;    
   default: // Move a specific servo
     moveServoFromString(_servo, pos);
     break;
