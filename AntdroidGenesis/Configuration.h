@@ -1,11 +1,21 @@
 /**
+ * Configuration.h
  * Configuration values for the Antdroid
  */
 
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
+
 /** Default servo settings */
-//#define SERVO_WAIT_TIME 40    // Delay inbetween each updating the same servo
-int SERVO_WAIT_TIME = 40;
 #define SERVO_SETUP_DELAY 200 // Delay between setting up each servo on inital startup
+
+/** Use onboard servo driving via Arduino Servo library */
+//#define SERVO_DRIVER_ONBOARD
+/** Use TLC5940 16 Channel PWM driver */
+#define SERVO_DRIVER_TLC5940
+
+/** Default delay inbetween each updating the same servo */
+#define SERVO_WAIT_TIME_DEFAULT 40
 
 /** Servo pin map */
 int SERVO_PIN_MAP[18] = {
@@ -80,3 +90,5 @@ int SERVO_INVERTED_STATE[18] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1,         // Left hand servos
     -1, -1, -1, -1, -1, -1, -1, -1, -1 // Right hand servos
 };
+
+#endif
