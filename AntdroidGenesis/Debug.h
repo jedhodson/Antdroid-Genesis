@@ -1,4 +1,10 @@
-/** Debug stuff */
+/** 
+ * Debug.h
+ * Macros for debugging
+*/
+#ifndef DEBUG_H
+#define DEBUG_H
+
 #define DEBUG
 //#define DEBUG_SERVO_SIGNAL
 
@@ -12,4 +18,6 @@
 #define DEBUG_SERVO(servo, position) Serial.println("servoSet(" + (String)servo + ", " + (String)position + ")")
 #else
 #define DEBUG_SERVO(servo, position) 
+#endif
+
 #endif

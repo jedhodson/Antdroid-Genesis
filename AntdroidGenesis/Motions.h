@@ -1,8 +1,10 @@
 /**
  * Motions.h
  * Motion functions that can be called from event or in loop
- * @TODO FINISH THIS FILE
  */
+
+#ifndef MOTIONS_H
+#define MOTIONS_H
 
 /** Move outer legs out in preparation for a stand */
 void MotionPrepareForStand()
@@ -42,3 +44,5 @@ void MotionPushUpright()
   MotionUpTouchGround();
   setFemurs(25);
 }
+
+#endif

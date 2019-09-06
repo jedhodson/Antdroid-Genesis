@@ -3,7 +3,7 @@
  * Just some helper functions to make life a little easier
  */
 
-/** Macro for getting compile time array size. @TODO Fix this */
+/** Macro for getting compile time array size. Can't be used to get size of array passed as a parameter of a function */
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
 /**

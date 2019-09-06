@@ -7,51 +7,20 @@
  * Tibia  - Lower leg (the blue legs)
 */
 
-#include <Servo.h>
-Servo SERVO[18];
-
 #include "Debug.h"
 #include "Configuration.h"
 #include "Helpers.h"
+#include "Servos.h"
 #include "Motion.h"
 #include "Motions.h"
 
-bool controlMode = false;
+typedef enum {
+  RELATIVE_INITIAL = 0,
+  RELATIVE_CURRENT = 1,
+  ABSOLUTE = 2
+} CONTROL_MODE;
 
-/**
- * Initialize Servo
- * Attach servo to pin if no already attached and set send to initial position
- *
- * @param  index   Index of the servo in the SERVO array
-*/
-void initializeServo(int index)
-{
-  if (!SERVO[index].attached())
-    SERVO[index].attach(SERVO_PIN_MAP[index]);
-
-  SERVO[index].write(SERVO_INITPOS_OFFSET[index]);
-}
-
-/** Build the servo array and initialize the servos */
-void initializeServos()
-{
-  DEBUG_PRINT("initalizeServos()");
-
-  for (int i = 0; i < 18; i++)
-  {
-    if (SERVO_ENABLED[i])
-    {
-      DEBUG_PRINT("Configuring servo " + (String)i + " on pin " + (String)SERVO_PIN_MAP[i]);
-
-      SERVO[i] = Servo(); // Add the servo
-      initializeServo(i); // Initialize the servo
-    }
-    else
-    {
-      DEBUG_PRINT("Skipping servo " + (String)i + " configuration for pin " + (String)SERVO_PIN_MAP[i]);
-    }
-  }
-}
+CONTROL_MODE _mode = RELATIVE_INITIAL;
 
 void setup()
 {
@@ -65,6 +34,8 @@ void setup()
   delay(1000);
 
   MotionPushUpright();
+
+  Serial.println("Done!");
 }
 
 void loop()
@@ -97,16 +68,32 @@ void setCommand(String input)
     break;
   case 'r': // Get servo position (from memory)
   { 
-    int servoPosition = SERVO[pos].read();
+    int servoPosition = SERVO_POSITION[pos];
     Serial.println("Position of servo " + (String)pos + " is " + (String)servoPosition);
     break;
   }
   case 'm': // Change control mode
   { 
-    controlMode = !controlMode;
+    if(pos == 0) {
+      int _current = (int)_mode;
+      if(_current = 2) {
+        _current = 0;
+      }
+      else {
+        _current++;
+      }
+      _mode = (CONTROL_MODE)_current;
+    } else {
+      _mode = (CONTROL_MODE)(pos-1);
+    }
+
     Serial.println("Changed control mode to " + getControlModeName());
     break;
   }
+  case 's': // Adjust the speed
+    DEBUG_PRINT("Changing wait time from " + (String)SERVO_WAIT_TIME + " to " + (String)pos);
+    SERVO_WAIT_TIME = pos;
+    break;    
   default: // Move a specific servo
     moveServoFromString(_servo, pos);
     break;
@@ -115,7 +102,17 @@ void setCommand(String input)
 
 String getControlModeName()
 {
-  return controlMode ? "Relative to initial" : "Relative to current";
+  switch(_mode) {
+    case RELATIVE_CURRENT:
+      return "RELATIVE_CURRENT";
+      break;
+    case RELATIVE_INITIAL:
+      return "RELATIVE_INTITIAL";
+      break;
+    case ABSOLUTE:
+      return "ABSOLUTE";
+      break;
+  }
 }
 
 void moveServoFromString(String _servo, int pos)
@@ -124,12 +121,19 @@ void moveServoFromString(String _servo, int pos)
 
   if (servo >= 0 && servo < 18)
   {
-    DEBUG_PRINT("Setting servo " + (String)servo + " to position " + (String)pos + " mode: " + getControlModeName());
+    DEBUG_PRINT("Setting servo " + (String)servo + " to position " + (String)pos + ", mode: " + getControlModeName());
 
-    if (controlMode)
-      setSingleServoRelativeToInitial(servo, pos, SERVO_WAIT_TIME);
-    else
+    switch(_mode) {
+      case RELATIVE_CURRENT:
       setSingleServoRelativeToSelf(servo, pos, SERVO_WAIT_TIME);
+        break;
+      case RELATIVE_INITIAL:
+        setSingleServoRelativeToInitial(servo, pos, SERVO_WAIT_TIME);
+        break;
+      case ABSOLUTE:
+        servoSmoothSet(servo, pos, SERVO_WAIT_TIME);
+        break;
+    }
   }
   else
   {
