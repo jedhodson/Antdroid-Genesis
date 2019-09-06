@@ -6,12 +6,11 @@
  * Femur  - Middle leg servo
  * Tibia  - Lower leg (the blue legs)
 */
-#include "Tlc5940.h"
-#include "tlc_servos.h"
 
 #include "Debug.h"
 #include "Configuration.h"
 #include "Helpers.h"
+#include "Servos.h"
 #include "Motion.h"
 #include "Motions.h"
 
@@ -22,30 +21,6 @@ typedef enum {
 } CONTROL_MODE;
 
 CONTROL_MODE _mode = RELATIVE_INITIAL;
-
-/** Build the servo array and initialize the servos */
-void initializeServos()
-{
-  DEBUG_PRINT("initalizeServos()");
-
-  tlc_initServos();
-
-  for (int i = 0; i < 18; i++)
-  {
-    if (SERVO_ENABLED[i])
-    {
-      DEBUG_PRINT("Configuring servo " + (String)i + " on pin " + (String)SERVO_PIN_MAP[i]);
-      
-      servoSet(i, SERVO_INITPOS_OFFSET[i], true);
-    }
-    else
-    {
-      DEBUG_PRINT("Skipping servo " + (String)i + " configuration for pin " + (String)SERVO_PIN_MAP[i]);
-    }
-
-    delay(SERVO_SETUP_DELAY);
-  }
-}
 
 void setup()
 {
